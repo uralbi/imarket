@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+   <div class="container-md">
+       <h5 class=""> Messages by Subject
+       <a href="#" type="button"
+                   class="btn btn-outline-dark btn-sm mx-3 py-0 px-2 disabled"> {{subs.count}} </a>
+       </h5>
+       <div id="dynamic_height" class="p-0">
+           {% for item in subs%}
+           <div class="card mb-3 p-2 me-4 inner_shadow" style="background: #d1d1e0">
+              <div class="row g-0">
+
+                <div class="col-1" style="max-height: 80px; overflow: hidden;">
+                  <img src="{{item.image1.url}}" class="img-fluid rounded m-1" alt="Item Picture">
+                    <span class="badge text-bg-light mt-3 ms-1 border" style="position: absolute; top:0; opacity: 0.8;">{{item.price}}$</span>
+                </div>
+
+                <div class="col-sm-11">
+
+                    <a href="{% url 'item_detail_view' item.id%}" style="text-decoration: none; color: black">
+                    <h6 class="mx-3 ps-2 pb-1 m-0" style="border-bottom: solid 1px whitesmoke;">
+                    {{item.item_name}}</h6></a>
+
+                    <a href="" class="enlarge_view{{item.id}}"
+                       style="position: absolute; right:0; top: 0px; margin: 2px 6px 0 0;">
+                        <img src="/media/icons/enlarge.svg" alt="Expand icon" class="my_icon_sm">
+                    </a>
+
+
+                  <div class="card-body py-2 enlarge_{{item.id}}" style="max-height: 85px; overflow-y: scroll;">
+                    {% for msg in my_msgs %}
+                        {% if msg.subject.id == item.id %}
+                          <div class="p-1 mb-1 rounded my_shadow_sm {% if msg.sender != request.user %}right{%endif%}"
+                            style="{% if msg.sender != request.user %}
+                                        background:#f0f5f5;
+                                        min-width: 60%;
+                                        float: right;
+                                        border-top-left-radius: 200px;
+                                    {% else %}
+                                        background: #f0f0f5;
+                                        min-width: 60%;
+                                        float: left;
+                                        border-bottom-right-radius: 200px;
+                                    {%endif%}">
+
+                              <p class="text-muted fst-italic m-0 p-0 {% if msg.sender != request.user %}right{%endif%}"
+                                style="font-size: 0.7em;">
+                            {{msg.created_at}}</p>
+
+
+                            <p class="m-0 p-0 {% if msg.sender != request.user %}right{%endif%}"
+                                style="">
+                                {% if msg.sender != request.user %}
+                                    From: {{msg.sender.first_name}} {{msg.sender.last_name}}
+                                {%else%}
+                                    To: {{msg.receiver.first_name}} {{msg.receiver.last_name}}
+                                {%endif%}
+                               </p>
+                              {% if msg.sender == request.user %}
+                                    <form action="{% url 'delete_msg' %}" method="post" class="me-2" style="width: 50px; float:left;">
+                                      {% csrf_token %}
+                                      <input type="text" value="{{msg.id}}" name="msg_id" hidden>
+                                      <button type="submit" class="btn btn-sm p-0 px-2 mb-1 my_delete_btn float-right"
+                                                            style="background: #d98c8c; color: #f9ecec; font-size: 0.7em;">
+                                          Delete </button>
+                                    </form>
+                                {% endif %}
+                            <p class="m-0 p-0 px-4 fst-italic {% if msg.sender != request.user %}right{%endif%}"
+                                style="{% if msg.sender != request.user %}color:#862d2d; {% else %}color: #264d73;{%endif%}">
+                                {{msg.content|capfirst}}
+                                {% if msg.sender != request.user %}
+                                    <a class="btn btn-sm py-0 px-2 ms-2 open_msg_chat{{msg.id}}"
+                                        style="background: #75a3a3; color: #f0f5f5; font-size: 0.7em;">Reply</a>
+                                {%endif%}
+                            </p>
+                          </div>
+                                <div id="delete_modalchat{{msg.id}}" class="my_delete_modal">
+                                  <div class="chat_modal_content">
+                                      <form class="col s12" action="{% url 'send_msg' %}" method='POST'>
+                                        {% csrf_token %}
+                                      <div class="">
+                                          <div class="card-body">
+                                              <h6 class="card-title text-muted">
+                                                  Subject:
+                                                  <span class="my_spantext">{{msg.subject.item_name|truncatechars:70}}</span>
+                                                <small>for ${{msg.subject.price}}</small>
+                                              </h6>
+
+                                              <hr>
+
+                                              <h6 class="card-subtitle mb-2 text-muted">
+                                                  To "<span class="my_spantext">{{ msg.sender.first_name|title}}</span>"
+                                                </h6>
+                                              <p class="text-muted m-0 p-0">Message:</p>
+                                              <input type="text" id="receiver" name="receiver"
+                                                       class="form-control inner_shadow" minlength="5"
+                                                       value="{{msg.sender.email}}" required hidden>
+                                              <input type="text" id="item" name="item" value="{{msg.subject.id}}"
+                                                       class="form-control inner_shadow" minlength="5" required hidden>
+                                              <textarea id="msg" name="msg" rows="2" cols="32" required
+                                              class="border rounded fst-italic inner_shadow ps-2 my-1"></textarea>
+
+                                                  <a role="button" href="#" type="button"
+                                              class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modalchat{{msg.id}}">Cancel</a>
+
+                                              <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4"> Send Message  </button>
+
+                                          </div>
+                                      </div>
+                                      </form>
+                                  </div>
+                                </div>
+                                <script>
+                                    $(document).ready(function(){
+                                          $('.open_msg_chat{{msg.id}}').click(function() {
+                                              $("#delete_modalchat{{msg.id}}").show();
+                                               return false;
+                                          });
+                                      });
+                                      $(document).ready(function(){
+                                          $('#close_modalchat{{msg.id}}').click(function() {
+                                              $("#delete_modalchat{{msg.id}}").hide();
+                                          });
+                                      });
+                                </script>
+                        {%endif%}
+                    {% endfor %}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+           <script>
+               $(document).ready(function(){
+                $(".enlarge_view{{item.id}}").click(function(){
+                    var $view_mh = $(".enlarge_{{item.id}}").css('max-height')
+                    if ($view_mh =="85px"){
+                        $(".enlarge_{{item.id}}").css('max-height', '800px');
+                        return false;
+                        }
+                    else {
+                    $(".enlarge_{{item.id}}").css('max-height', '85px');
+                        return false;
+                    }
+                   });
+               });
+           </script>
+           {% endfor %}
+        </div>
+  </div>
+{% endblock %}

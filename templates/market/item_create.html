@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+     <div class="container" id="dynamic_height" style="margin-top: 2%;">
+        <div class="mb-3" id="log_form">
+            <h3> <span class="my_spantext">{{page}} Item</span> </h3>
+            <form {% if update %} action="{% url 'item_update' item.id %}"
+                  {% else %} action="{% url 'add_item' %}" {% endif %}
+                  method="post" enctype="multipart/form-data" class="form-register">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary px-5 my_shadow"><span> {{page}} Item </span> </button>
+            </form>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('label').wrapInner( "<span style='color: #8585ad;'></span>");
+        $('label').fadeOut(0);
+        $('label').fadeIn(400);
+
+    });
+
+    var $inputs = $("input");
+    var $selects = $('select');
+    var $textar = $('textarea');
+
+    jQuery(function($){
+       $inputs.fadeOut(0);
+       $selects.fadeOut(0);
+       $textar.fadeOut(0);
+       $inputs.fadeIn(600);
+       $selects.fadeIn(600);
+       $textar.fadeIn(600);
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container" id="dynamic_height" style="margin-top: 5%;">
+        <div class="row" id="log_form">
+            <form action="{% url 'login' %}" method='POST'>
+              {% csrf_token %}
+                <div class="row">
+
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                      <input type="email" id="Email" name="email" class="form-control inner_shadow" required>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="password">Password</label>
+                      <input type="password" name="password" id="password" class="form-control inner_shadow" required>
+
+                    </div>
+
+                      <div class="mb-3">
+                          <button type="submit" class="btn btn-primary px-5 my_shadow"> Login  </button>
+                      </div> <!-- form-group// -->
+                    <div class="input-field col s12">
+                          <a href="{% url 'register' %}" class="btn btn-sm">Register</a> <br>
+                          <a href="{% url 'forgotPassword' %}" class="btn btn-sm" >Forgot password?</a>
+                      </div> <!-- form-group// -->
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    var $inputs = $("input");
+    jQuery(function($){
+       $inputs.fadeOut(0);
+       $inputs.fadeIn(1000);
+  });
+</script>
+
+{% endblock %}

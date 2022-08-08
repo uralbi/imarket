@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+     <div class="container">
+        <div class="mb-3" id="log_form">
+
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ item }}"?</p>
+            {{ form }}
+            <input type="submit" value="Confirm">
+        </form>
+
+        </div>
+    </div>
+
+{% endblock %}

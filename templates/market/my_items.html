@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-md">
+
+   <div class="row">
+       <div class="col-sm-6">
+        <h3>My Items <a href="#" type="button"
+                   class="btn btn-outline-dark btn-sm mx-3 py-0 px-2 disabled"> {{total_items}} </a> </h3>
+       </div>
+
+       <div class="col-sm-6">
+            <div class="d-flex justify-content-end p-2 pb-0">
+                <a href="{% url 'saved_items' %}" class="btn btn-sm py-0 px-2 me-2 my_shadow"
+                   style="background: #6699cc; color: #ecf2f9;">Saved Items</a>
+                <a href="{% url 'my_msgs' %}" class="btn btn-sm py-0 px-2 me-2 my_shadow"
+                   style="background: #6699cc; color: #ecf2f9;">Messages</a>
+                <a href="{% url 'add_item'%}" class="btn btn-sm py-0 px-2 my_shadow"
+                   style="background: #85adad; color:  #f0f5f5;"> Add Item</a>
+            </div>
+       </div>
+
+   </div>
+    <hr>
+
+   <div id="dynamic_height" class="p-2">
+       {% for item in items %}
+        <div class="row inner_shadow m-0 mb-4 border rounded px-1 py-4" style="background: {% cycle '#f0f0f5' 'whitesmoke' %}">
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <a href="{% url 'item_detail_view' item.id %}">
+                    <img class="my_items_img my_shadow" src="{{item.image1.url}}" alt="Item picture">
+                </a>
+            </div>
+
+            <div class="col-10 py-2" style="font-size: 0.9em;">
+                <div class="row">
+                <div class="col-sm-6 p-0 pe-1">
+                    <div class="m-0" style="background: {% cycle '#f0f0f5' 'whitesmoke' %}">
+                        <div class="card-header p-1" style="background: {% cycle '#e0e0eb' '#e6e6e6' %};">
+                            <strong> {{ item|title }} </strong> in {{item.category}}
+                        </div>
+                        <div class="p-1">
+                                <p class="card-text m-0"><b> Price:</b> {{item.price}} $</p>
+                                <p class="card-text m-0"><b>Modified date: </b> {{item.modified_date|date:"d M Y"}}</p>
+                                {% if item.description %}
+                                <p class="card-text m-0 height_scroll"><b>Description: </b>{{ item.description}}</p>
+                                {% endif %}
+                        </div>
+                    </div>
+
+                        <a role="button" href="#" type="button"
+                           class="btn btn-sm py-0 mt-2 mb-2 me-2 my_shadow my_delete_btn"
+                           style="background: #d98c8c; color: #f9ecec;"
+                            id="open_modal_{{item.id}}">Delete</a>
+
+                    <div id="delete_modal_{{item.id}}" class="my_delete_modal">
+                        <div class="delete_modal_content">
+                            <h6>Item "{{item|title}}".</h6>
+                            <p>Please confirm to delete!</p>
+                            <a role="button" href="{% url 'item_delete' item.pk %}" type="button"
+                                class="btn btn-outline-danger py-0 mt-2 me-2 btn-sm my_shadow me-4 px-4">Delete</a>
+                            <a role="button" href="#" type="button"
+                                class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal_{{item.id}}">Close</a>
+                        </div>
+                    </div>
+        <script type="text/javascript">
+                            $(document).ready(function(){
+                                $('#open_modal_{{item.id}}').click(function() {
+                                    var vis = $('#delete_modal_{{item.id}}').is(':visible')
+                                    if(vis){
+                                        $("#delete_modal_{{item.id}}").hide();
+                                    }
+                                    else{
+                                        $("#delete_modal_{{item.id}}").show();
+                                    }
+                                });
+                            });
+
+                            $(document).ready(function(){
+                                $('#close_modal_{{item.id}}').click(function() {
+                                    $("#delete_modal_{{item.id}}").hide();
+                                });
+                            });
+                        </script>
+
+                    <a href="{% url 'item_update' item.id %}" type="button"
+                       class="btn btn-sm py-0 px-5 mt-2 mb-2 my_shadow"
+                    style="background: #75a3a3; color: #f0f5f5;"
+                    >Edit</a>
+
+                </div>
+                <div class="col-sm-6 p-0 pe-1">
+                    <div class="m-0" style="background: {% cycle '#f0f0f5' 'whitesmoke' %};">
+                        <div class="card-header p-1" style="background: {% cycle '#e0e0eb' '#e6e6e6' %}">
+                            <strong> Gallery </strong>
+                        </div>
+
+                        <div class="card-body p-1 pb-2 height_scroll">
+                            {% for image in gallery %}
+                                {% if image.item.id == item.id %}
+                                    <a href="#" id="open_img_modal_{{image.id}}" class="gallery_img_a">
+                                        <img class="item_detail_img_thm" src="{{image.image.url}}" alt="Item picture">
+                                    </a>
+                                <div id="delete_image_{{image.id}}" class="my_delete_modal">
+                                    <div class="delete_modal_content">
+                                        <h5>Confirm to delete!</h5>
+                                        <img src="{{image.image.url}}" alt="Item picture" class="img-fluid rounded"
+                                    style="max-height: 400px;">
+                                        <p>
+                                        <a role="button" href="{% url 'image_delete' image.id %}" type="button"
+                                        class="btn btn-outline-danger py-0 btn-sm m-4 px-4 my_shadow">Delete</a>
+                                        <a role="button" href="#" type="button"
+                                        class="btn btn-outline-secondary py-0 btn-sm m-4 px-4 my_shadow" id="close_image_{{image.id}}">Close</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                    <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $('#open_img_modal_{{image.id}}').click(function() {
+                                            var vis = $('#delete_image_{{image.id}}').is(':visible')
+                                            if(vis){
+                                                $("#delete_image_{{image.id}}").hide();
+                                            }
+                                            else{
+                                                $("#delete_image_{{image.id}}").show();
+                                            }
+                                        });
+                                    });
+
+                                    $(document).ready(function(){
+                                        $('#close_image_{{image.id}}').click(function() {
+                                            $("#delete_image_{{image.id}}").hide();
+                                        });
+                                    });
+                                </script>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                </div>
+
+                        <div class="card-body p-1 m-0">
+                                <form action="{% url 'add_gallery' item.id %}" method="post" enctype="multipart/form-data"
+                                      class="form-register">
+                                    {% csrf_token %}
+                                    <p class="m-0 mt-2">
+                                        <input type="file" name="image" accept="image/*"
+                                               class="form-control py-0 float-start my_shadow" required
+                                               id="id_image" style="width: 75%; font-size:0.9em;">
+                                        <button type="submit"
+                                                class="btn btn-sm px-3 py-0 me-2 float-end my_shadow"
+                                        style="background: #75a3a3; color: #f0f5f5;"
+                                        ><span> Add </span> </button>
+                                    </p>
+                                </form>
+                        </div>
+                </div>
+                    </div>
+
+            </div>
+        </div>
+       {% endfor %}
+   </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+               {% include 'includes/_pagination.html' %}
+           {% endif %}
+</div>
+
+  </div>
+
+{% endblock %}

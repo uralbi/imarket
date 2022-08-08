@@ -1,0 +1,52 @@
+{% load static %}
+
+<div class="mt-5" style="background-color: #204060;">
+<div class="container my-0">
+  <footer class="py-5" style="font-size: 0.8em;">
+    <div class="row">
+
+      <div class="col-4 mb-3 text-white">
+        <h5>Main Menu</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Items</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Informations</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col-4 mb-3 text-white">
+        <h5>Top Blog Posts</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col-4 mb-3 text-white">
+        <h5>Top 5 Categories</h5>
+        <ul class="nav flex-column">
+          {% for cat in categories|slice:":5"  %}
+                <li class="nav-item mb-2"><a href="{{cat.get_absolute_url}}" class="nav-link p-0 text-white">{{cat}}
+                  <span class="badge text-secondary">{{cat.category_items}}</span></a></li>
+          {%endfor%}
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between border-top text-white">
+      <p>&copy; 2022 Company, Inc. All rights reserved.</p>
+      <ul class="list-unstyled d-flex">
+        <li class="ms-3"><a class="link-light" href="#">Twitter</a></li>
+        <li class="ms-3"><a class="link-light" href="#">Instagram</a></li>
+        <li class="ms-3"><a class="link-light" href="#">Facebook</svg></a></li>
+      </ul>
+    </div>
+  </footer>
+</div>
+</div>

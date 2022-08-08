@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load words_to_list %}
+{% block content %}
+   <div class="container-md">
+
+       <div class="row">
+           <div class="col-sm-6">
+           <h3>
+              Search Results for "<span class="my_spantext">{{request.GET.q|title}}</span>"  {% if request.GET.q2 %}
+              <span style="font-size: 0.5em;"> &#10095;&#10095;</span>
+               "<span class="my_spantext">{{request.GET.q2|title}}</span>" {% endif %}</h3>
+            </div>
+
+           <div class="col-sm-6">
+
+           <form action="{% url 'item_search2' %}" class="d-flex justify-content-left" role="search">
+              {% csrf_token%}
+              <input class="" type="search" name="q" value="{{request.GET.q}}" placeholder="Search" aria-label="Search" reqired hidden>
+              <input class="form-control me-2 inner_shadow m-0 p-0 ps-2"
+                     style="max-width: 250px;" minlength="3"
+                     type="search" name="q2" placeholder="Search" aria-label="Search" reqired>
+              <button class="btn btn-sm float-left px-2 my_shadow"
+                      style="background: #85adad; color:  #f0f5f5;"
+                      type="submit">Search within</button>
+            </form>
+           </div>
+
+        </div>
+       <hr>
+       <div id="dynamic_height" class="p-2">
+           {% if items %}
+           {% for item in items %}
+                <div class="row inner_shadow m-0 mb-2 rounded px-1 py-2" style="background: {% cycle '#f0f0f5' 'whitesmoke' %};">
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                        <a href="{% url 'item_detail_view' item.id %}">
+                        <img class="my_items_img my_shadow" src="{{item.image1.url}}" alt="Item picture">
+                            </a>
+                    </div>
+                    <div class="col-10 py-2" style="font-size: 0.9em;">
+                        <div class="row">
+                        <div class="col-sm-6">
+                            <span class="text_search2{{item.id}}" style="font-weight: bold;"> {{ item|title }} </span> in {{item.category}}
+                            <br>
+                            <b> Price: </b> {{item.price}} $  <br>
+                            <b>Modified date: </b> {{item.modified_date|date:"d M Y"}} <br>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Description</h6>
+                            <p class="text-muted text_search{{item.id}}">{{item.description|truncatechars:200}}</p>
+                        </div>
+                            </div>
+                    </div>
+                </div>
+
+                <script>
+                $(document).ready(function(){
+                    var text = $(".text_search{{item.id}}").text();
+                    {% for query in request.GET.q|words_to_list %}
+                        text  = text.replace('{{query}}','<span style="color: #990000;">{{query}}</span>');
+                        text  = text.replace('{{query|title}}','<span style="color: #990000;">{{query|title}}</span>');
+                        text  = text.replace('{{query|upper}}','<span style="color: #990000;">{{query|upper}}</span>');
+                    {% endfor %}
+
+                        {% if request.GET.q2 %}
+                            {% for query in request.GET.q2|words_to_list %}
+                                text  = text.replace('{{query}}','<span style="color: #990000;">{{query}}</span>');
+                                text  = text.replace('{{query|title}}','<span style="color: #990000;">{{query|title}}</span>');
+                                text  = text.replace('{{query|upper}}','<span style="color: #990000;">{{query|upper}}</span>');
+                            {% endfor %}
+                        {% endif %}
+                    $(".text_search{{item.id}}").html(text);
+
+                    var text2 = $(".text_search2{{item.id}}").text();
+                    {% for query in request.GET.q|words_to_list %}
+                        text2  = text2.replace('{{query|title}}','<span style="color: #990000; font-weight: bold;">{{query|title}}</span>');
+                        text2  = text2.replace('{{query}}','<span style="color: #990000; font-weight: bold;">{{query}}</span>');
+                    {% endfor %}
+                        {% if request.GET.q2 %}
+                            {% for query in request.GET.q2|words_to_list %}
+                                text2  = text2.replace('{{query}}','<span style="color: #990000; font-weight: bold;">{{query}}</span>');
+                                text2  = text2.replace('{{query|title}}','<span style="color: #990000; font-weight: bold;">{{query|title}}</span>');
+                            {% endfor %}
+                        {% endif %}
+                    $(".text_search2{{item.id}}").html(text2);
+
+                });
+                </script>
+            {% endfor %}
+           {% else %}
+                <div class="container">
+                    <div class="center80">
+                        <div class="card m-5 border text-bg-warning">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="card-body py-4 text-dark my_shadow rounded">
+                                  {% if not min_char %}
+                                <h5 class="card-title">No items were found!</h5>
+                                <p class="card-text">Please try different key words.</p>
+                                  {% else %}
+                                  <h5> Minimum 3 characters are required to search!</h5>
+                                  {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+           {% endif %}
+
+           {% if page_obj.paginator.num_pages > 1 %}
+               {% include 'includes/_pagination.html' %}
+           {% endif %}
+        </div>
+  </div>
+
+<script>
+
+</script>
+
+{% endblock %}

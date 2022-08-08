@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container" id="dynamic_min_height">
+        <div class="center80">
+                <div class="col-12 p-0 m-0">
+                    <div class="center_fixed_250">
+                        <a href="{% url 'prev_item' item.id %}" role="button"
+                           class="btn btn-sm py-0 me-2 {% if no_prev %} disabled {% endif %} my_shadow"
+                            style="background: #666699; color: #f0f5f5;
+                            border-top-left-radius: 20px; border-bottom-left-radius: 0px;"
+                        > &#10094; Previous Item</a>
+
+                        <a href="{% url 'next_item' item.id %}" role="button"
+                           class="btn btn-sm py-0 px-4 {% if no_next %} disabled {% endif %} my_shadow"
+                        style="background: #666699; color: whitesmoke;
+                            border-top-right-radius: 0px; border-bottom-right-radius: 20px;"
+                        >Next Item &#10095;</a>
+                    </div>
+                </div>
+                <div class="container mt-4 mb-3 item_detail_title">
+                <h4 class="p-2 rounded mt-4 my_shadow" style="background: #f0f0f5; color: #3d3d5c; text-align: center"> {{item.status}} : {{item|title}}
+                    <a href="{% url 'by_category' item.category.id %}">
+                           <span>in {{item.category}}</span>
+                    </a>
+                </h4>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                      <div class="card col-sm-12 mb-2 my_shadow" style="background: #f0f0f5;">
+                            <div class="card-header">
+                                 <strong>Details</strong>
+                            </div>
+
+                            <div class="card-body p-2">
+                                  <p class="card-text">Price: {{item.price}}$</p>
+                                  <p class="card-text">Date: {{item.modified_date|date:"F d, Y"}}</p>
+                                  <p class="card-text">Author: {{item.author.username|title}}</p>
+                                      <hr class="m-1">
+                                <div class="d-flex flex-row-reverse m-0">
+
+                                 {% if request.user.is_authenticated %}
+                                        {% if request.user != item.author %}
+                                            {% if not saved %}
+                                                <form action="{% url 'save_item' %}" method='post'>
+                                                    {% csrf_token %}
+                                                    <input type="email" id="id_user" name="user" required value="{{request.user}}" hidden>
+                                                    <input type="text" id="id_item" name="item" required value="{{item.id}}" hidden>
+                                                    <button class="my_save_icon m-2" type="submit" style="border:none; background: none;">
+                                                  <img src="/media/icons/save.svg" class="my_shadow" alt="Save icon"></button>
+                                                </form>
+                                            {% else %}
+                                                <form action="{% url 'del_save_item' %}" method='post'>
+                                                    {% csrf_token %}
+                                                    <input type="text" id="id_item2" name="item2" required value="{{item.id}}" hidden>
+                                                    <button class="my_save_icon m-2" type="submit" style="border:none; background: none;">
+                                                  <img src="/media/icons/saved.svg" class="my_shadow" alt="Saved icon"></button>
+                                                </form>
+                                            {% endif %}
+                                            <a href="#" id="open_modal" class="my_save_icon mt-2">
+                                                <img src="/media/icons/chat.svg" class="my_shadow" alt="Message icon">
+                                            </a>
+                                            <div id="delete_modal" class="my_delete_modal">
+                                                <div class="chat_modal_content">
+                                                    <form class="col s12" action="{% url 'send_msg' %}" method='POST'>
+                                                      {% csrf_token %}
+
+                                                    <div class="">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title text-muted">Subject:
+                                                                <span class="my_spantext">{{item.item_name|truncatechars:70}}</span>
+                                                                for <small>${{item.price}}</small>
+                                                            </h6>
+                                                            <h6 class="card-subtitle mb-2 text-muted">To "<span class="my_spantext">{{item.author.first_name|title}} {{item.author.last_name|title}}</span>"
+
+                                                            </h6>
+                                                            <p class="text-muted m-0 p-0">Message:</p>
+                                                            <input type="text" id="receiver" name="receiver"
+                                                                     class="form-control inner_shadow" minlength="5"
+                                                                     value="{{item.author}}" required hidden>
+                                                            <input type="text" id="item" name="item" value="{{item.id}}"
+                                                                     class="form-control inner_shadow" minlength="5" required hidden>
+                                                            <textarea id="msg" name="msg" rows="4" cols="30" required
+                                                            class="border rounded fst-italic ps-2 pt-1 inner_shadow"></textarea>
+
+                                                                <a role="button" href="#" type="button"
+                                                            class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal">Cancel</a>
+
+                                                            <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4"> Send Message  </button>
+
+                                                        </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        {% else %}
+                                            <a href="{% url 'item_update' item.id %}" type="button"
+                                               class="btn btn-sm py-0 px-4 m-2 my_shadow"
+                                            style="background: #75a3a3; color: #f0f5f5;"
+                                            >Edit</a>
+                                            <a role="button" href="#" type="button"
+                                                   class="btn btn-sm py-0 mt-2 mb-2 me-1 my_shadow my_delete_btn"
+                                                   style="background: #d98c8c; color: #f9ecec;"
+                                                    id="open_modal_{{item.id}}">Delete</a>
+
+                                            <div id="delete_modal_{{item.id}}" class="my_delete_modal">
+                                                <div class="delete_modal_content">
+                                                    <h6>Item "{{item|title}}".</h6>
+                                                    <p>Please confirm to delete!</p>
+                                                    <a role="button" href="{% url 'item_delete' item.pk %}" type="button"
+                                                        class="btn btn-outline-danger py-0 mt-2 me-2 btn-sm my_shadow me-4 px-4">Delete</a>
+                                                    <a role="button" href="#" type="button"
+                                                        class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal_{{item.id}}">Close</a>
+                                                </div>
+                                            </div>
+
+                                            <script type="text/javascript">
+                            $(document).ready(function(){
+                                $('#open_modal_{{item.id}}').click(function() {
+                                    var vis = $('#delete_modal_{{item.id}}').is(':visible')
+                                    if(vis){
+                                        $("#delete_modal_{{item.id}}").hide();
+                                    }
+                                    else{
+                                        $("#delete_modal_{{item.id}}").show();
+                                    }
+                                });
+                            });
+
+                            $(document).ready(function(){
+                                $('#close_modal_{{item.id}}').click(function() {
+                                    $("#delete_modal_{{item.id}}").hide();
+                                });
+                            });
+                        </script>
+                                        {% endif %}
+                                    {% else %}
+<!--                                        <a href="{% url 'login' %}">Login to contact</a>-->
+                                        <a href="{% url 'login' %}?next={{request.path}}">Login to contact</a>
+<!--                                        <a href="{% url 'login' %}?next={% url 'home' %}">Login to contact</a>-->
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                      </div>
+              </div>
+
+              <div class="col-md-8">
+                  <div class="d-flex justify-content-center">
+                    <img class="item_detail_img my_shadow" src="{{item.image1.url}}" alt="Item picture">
+                  </div>
+                  <div class="col-sm-12 my-2 item_detail_list_gallery">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a href="#" class="gallery_img_a">
+                                    <img class="item_detail_img_thm" src="{{item.image1.url}}" alt="Item picture">
+                                    </a>
+                                {% for image in gallery%}
+                                    <a href="#" class="gallery_img_a">
+                                    <img class="item_detail_img_thm" src="{{image.image.url}}" alt="Item picture">
+                                    </a>
+                                {% endfor %}
+                                </li>
+                            </ul>
+                  </div>
+              </div>
+            </div>
+
+            {% if item.description %}
+                <div class="col-12" >
+                    <div class="card mb-3 my_shadow" style="background: #f0f0f5;">
+                      <div class="card-header"><strong>Description</strong></div>
+                      <div class="card-body">
+                        <p class="card-text"> {{item.description}} </p>
+                      </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+<script src="{% static 'js/image_thm.js' %}"></script>
+
+{% endblock%}

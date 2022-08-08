@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <h5>Item Categories</h5>
+                <div class="side_categories my_shadow_sm" style="border-radius: 5px; background:#d9e6f2">
+                        {% for category in categories %}
+                            {% ifchanged %}
+
+                                <p class="badge my-1 my_shadow_sm"
+                                {% if category == current_category %} style="background: #d1e0e0; font-color: #d27979;"
+                                   {%else%}
+                                   style="background: #b3cce6;"
+                                   {%endif%}>
+                                    <a href="{% url 'by_category' category.id %}">
+                                {{category}}
+                                    <span class="badge">{{category.category_items}}</span>   </a></p>
+                            {% endifchanged %}
+                        {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="container ps-0">
+
+
+                    <div class="row">
+                        <div class="col-8">
+                            <h4>Items in "{{ current_category }}" category.</h4>
+                        </div>
+                    <div class="col-4 d-flex justify-content-end align-items-end">
+                            <a class="my_icon" id="my_list_template">
+                                <img src="/media/icons/list_view.svg" alt="List view icon">
+                            </a>
+                            <a class="my_icon" id="my_card_template">
+                                <img src="/media/icons/card_view.svg" alt="Card view icon">
+                            </a></div>
+                        </div>
+
+                    <hr>
+                    <div id="dynamic_height">
+
+                       {% for item in items %}
+                      <div class="item_card my_shadow rounded">
+                            <a href="{% url 'item_detail_view' item.pk%}" class="list_link">
+                            <div class="item_card_img"> <img src="{{item.image1.url}}" alt="product picture" class="list_img"> </div></a>
+                            <div class="item_card_title">
+                                <a href="{% url 'item_detail_view' item.pk%}" class="list_link">{{item}}</a> </div>
+                            <div class="item_card_price"> {{item.price}} $ </div>
+                            <div class="item_card_desc">
+                                <a href="{% url 'item_detail_view' item.pk%}" class="list_link">
+                                    {{item.description|capfirst|truncatechars:130}} </a> </div>
+                            <div class="item_card_date">{{item.modified_date|date:"d-M"}} </div>
+                        </div>
+
+                    {% endfor %}
+
+
+                        </div>
+                </div>
+            </div>
+        </div>
+
+          {% if page_obj.paginator.num_pages > 1 %}
+               {% include 'includes/_pagination.html' %}
+           {% endif %}
+    </div>
+{% endblock %}

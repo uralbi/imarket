@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container" style="margin-top:5%;">
+        <div id="dynamic_height">
+            <div class="row" id="log_form">
+                <form class="col s12" action="{% url 'register' %}" method='POST'>
+                  {% csrf_token %}
+                    <div class="row">
+                        <div class="mb-2">
+                            <label for="email">Email</label>
+                          <input type="email" id="Email" name="email" class="form-control inner_shadow" minlength="5" required>
+
+                        </div>
+                        <div class="mb-2">
+                            <label for="id_first_name">First Name</label>
+                          <input type="text" id="id_first_name" name="first_name" class="form-control inner_shadow" minlength="3" required>
+
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="id_last_name">Last Name</label>
+                          <input type="text" name="last_name" id="id_last_name" class="form-control inner_shadow" minlength="2" required>
+
+                        </div>
+
+                        <div class="mb-2">
+                             <label for="id_password">Password</label>
+                          <input type="password" name="password" id="id_password" class="form-control inner_shadow" required>
+
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="id_confirm_password">Confirm Password</label>
+                          <input type="password" name="confirm_password" id="id_confirm_password" class="form-control inner_shadow" required>
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-5 my_shadow"> Register  </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    var $inputs = $("input");
+    jQuery(function($){
+       $inputs.fadeOut(0);
+       $inputs.fadeIn(1000);
+  });
+</script>
+
+{% endblock %}
