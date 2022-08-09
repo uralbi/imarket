@@ -3,6 +3,6 @@ from django.db.models import Avg, Count, Sum
 
 
 def active_categories(request):
-    categories = Category.objects.annotate(category_items=Count('item')).order_by('-category_items')\
-        .filter(category_items__gt=0)
+    categories = Category.objects.annotate(categoryitems=Count('item')).order_by('-categoryitems')\
+        .filter(categoryitems__gt=0)
     return dict(categories=categories)
