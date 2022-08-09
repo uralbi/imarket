@@ -1,5 +1,6 @@
 <h5> <span class="my_spantext"> Item Categories </span></h5>
 <div class="side_categories my_shadow_sm">
+    {% if categories %}
                         {% for category in categories %}
                             {% ifchanged %}
                                 <p class="badge my_shadow_sm"
@@ -12,4 +13,5 @@
                                     <span class="badge">{{category.category_items}}</span>   </a></p>
                             {% endifchanged %}
                         {% endfor %}
+    {% endif %}
                 </div>

@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['imarket46.herokuapp.com']
+ALLOWED_HOSTS = ['imarket46.herokuapp.com', '127.0.0.1']
 
 register = template.Library()
 
