@@ -4,10 +4,7 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import DetailView, CreateView, ListView, DeleteView, UpdateView
 from django.shortcuts import redirect
-from django.urls import reverse_lazy, resolve
-from django.http import HttpResponseForbidden
-from django.core.paginator import Paginator
-from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
 from django.template.defaultfilters import slugify
 from django.db.models import Q
 from accounts.models import Account
@@ -58,8 +55,6 @@ class ItemCreate(CreateView):
 class MyItems(ListView):
     model = Item
     template_name = 'market/my_items.html'
-        # default object name: object_list
-        # adding new object name:
     context_object_name = 'items'
     paginate_by = 10
 
@@ -276,7 +271,7 @@ class Item_Search_View(ListView):
     model = Item
     context_object_name = 'items'
     template_name = 'market/search_results.html'
-    paginate_by = 40
+    paginate_by = 20
 
     def get_context_data(self, *, objects_list=None, **kwargs):
 

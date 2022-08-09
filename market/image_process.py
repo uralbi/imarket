@@ -1,5 +1,4 @@
 from PIL import Image
-import os
 
 
 def image_process(image_path):
@@ -7,7 +6,6 @@ def image_process(image_path):
     rgb_image = raw_image.convert('RGB')
     width, height = rgb_image.size
     img_ratio = round(width/height,2)
-    img_size_was = round(os.path.getsize(image_path)/1000000,2)
 
     if img_ratio < 0.8:
         cr_size = (height - width) / 2.2
@@ -17,7 +15,6 @@ def image_process(image_path):
         cr_size = (width - height) / 2.7
         cr_image = rgb_image.crop((0 + cr_size, 0, width - cr_size, height))
         cr_image.save(image_path)
-
 
     rgb_image = Image.open(image_path)
     width, height = rgb_image.size

@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg fixed-top p-0 shadow-sm" style="background-color: #264d73;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}"><img class="logo_img" src="{% url 'icons' 'logo1_w.png'%}"></a>
+    <a class="navbar-brand text-light" href="{% url 'home' %}"><img class="logo_img" src="{% url 'icons' 'logo1_w.png'%}">i-Market</a>
     <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon" style="color: white;"></span>
     </button>
@@ -13,37 +13,33 @@
       </div>
       <div class="offcanvas-body" style="background-color: #264d73;">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item my_navicon"><a class="nav-link text-white" href="{% url 'home' %}">
-              <img src="{% url 'icons' 'home_w.svg' %}" alt="Home icon"></a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">
+              <img src="{% url 'icons' 'home_w.svg' %}" class="my_navicon" alt="Home icon"></a></li>
 
           {% if user.is_authenticated %}
 
-          <li class="nav-item my_navicon"><a class="nav-link msg_open_toggle" href="#">
-            <img src="/media/icons/chat_w.svg" alt="Messages icon">
+          <li class="nav-item"><a class="nav-link msg_open_toggle" href="#">
+            <img src="/media/icons/chat_w.svg" class="my_navicon" alt="Messages icon">
               {% if msg_users.count > 0 %}
               <span class="my_badge_number">{{msg_users.count}}</span>
               {% endif %}
           </a></li>
 
             {% if items_no > 0 %}
-          <li class="nav-item my_navicon"><a class="nav-link" href="{% url 'my_items' user.id %}">
-            <img src="/media/icons/my_items_w.svg" alt="My Items icon">
+          <li class="nav-item"><a class="nav-link" href="{% url 'my_items' user.id %}">
+            <img src="/media/icons/my_items_w.svg" class="my_navicon" alt="My Items icon">
 <!--              <span class="my_badge_number">{{items_no}}</span>-->
           </a></li>
             {% endif %}
 
             {% if s_items %}
-                <li class="nav-item my_navicon"><a class="nav-link" href="{% url 'saved_items'%}">
-                    <img src="/media/icons/saved_w(1).svg" alt="Saved Item icon">
+                <li class="nav-item"><a class="nav-link" href="{% url 'saved_items'%}">
+                    <img src="/media/icons/saved_w(1).svg" class="my_navicon" alt="Saved Item icon">
 <!--                    <span class="my_badge_number">{{s_items.count}}</span>-->
                 </a>
                 </li>
             {% endif %}
 
-          <li class="nav-item my_navicon"><a class="nav-link" id="add_item_link" href="{% url 'add_item' %}">
-            <img src="/media/icons/post_items_w.svg" alt="Post item icon">
-<!--              <span class="my_badge_number">+</span>-->
-          </a></li>
 
           <div id="msg_box">
 
@@ -78,14 +74,14 @@
 
                                 {% if msg.sender != request.user %}
                                             <div class="p-0 pb-2 m-0 right">
-                                              <a class="btn btn-sm p-0 m-0 px-2 open_msg_{{msg.id}}"
+                                              <a class="btn btn-sm p-0 m-0 px-2 open_msg_{{msg.id}} my_btn"
                                                     style="background: #75a3a3; color: #f0f5f5; font-size: 0.7em;">Reply</a>
                                             </div>
                                     {% else %}
                           <form action="{% url 'delete_msg' %}" method="post">
                               {% csrf_token %}
                               <input type="text" value="{{msg.id}}" name="msg_id" hidden>
-                              <button type="submit" class="btn btn-sm p-0 m-0 px-2 mb-1 g-0 my_delete_btn float-right"
+                              <button type="submit" class="btn btn-sm p-0 m-0 px-2 mb-1 g-0 my_delete_btn float-right my_btn"
                                                     style="background: #d98c8c; color: #f9ecec; font-size: 0.7em;"> Delete </button>
                           </form>
 
@@ -114,8 +110,8 @@
                                               <textarea id="msg" name="msg" rows="2" cols="40" required
                                               class="border rounded fst-italic ps-2 pt-1"></textarea>
                                                   <a role="button" href="#" type="button"
-                                              class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal{{msg.id}}">Cancel</a>
-                                              <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4"> Send Message  </button>
+                                              class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4 my_btn" id="close_modal{{msg.id}}">Cancel</a>
+                                              <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4 my_btn"> Send Message  </button>
 
                                           </div>
                                       </div>
@@ -161,28 +157,30 @@
               </div>
 
             <div class="d-flex justify-content-end">
-            <button class="btn btn-sm btn-outline-danger mt-2 py-0 px-5 msg_open_toggle my_shadow"
-                style="font-size: 0.5em;"> X </button>
+            <button class="btn btn-sm btn-secondary mt-2 py-0 px-5 msg_open_toggle my_shadow my_btn"> &#10007; </button>
             </div>
           </div>
 
-          <li class="nav-item dropdown text-white my_navicon" style="background-color: #264d73;">
+          <li class="nav-item dropdown text-white " style="background-color: #264d73;">
             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             <img src="/media/icons/settings_w.svg" alt="Post item icon">
+             <img src="/media/icons/settings_w.svg" class="my_navicon" alt="Settings icon">
             </a>
             <ul class="dropdown-menu mb-2">
 
 <!--              <li><hr class="dropdown-divider"></li>-->
-                <li><a class="dropdown-item p-1 ps-2" href="#">Dashboard</a></li>
-                <li><a class="dropdown-item p-1 ps-2" href="#">Messages</a></li>
+<!--                <li><a class="dropdown-item p-1 ps-2" href="#">Dashboard</a></li>-->
+                <li><a class="dropdown-item p-1 ps-2" href="{% url 'my_msgs' %}">Messages</a></li>
+                <li><a class="dropdown-item p-1 ps-2" href="{% url 'add_item' %}">
+                    Post an Item
+                  </a></li>
                 <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item p-1 ps-2" href="{% url 'logout' %}">Log Out</a></li>
+                <li><a class="dropdown-item p-1 ps-2" href="{% url 'logout' %}">Log Out</a></li>
 
             </ul>
           </li>
             {% else %}
-            <li class="nav-item my_navicon"><a class="nav-link text-white" href="{% url 'login' %}">
-                <img src="/media/icons/login.svg" alt="Login icon"></a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">
+                <img src="/media/icons/login.svg" class="my_navicon" alt="Login icon"></a></li>
             {% endif %}
         </ul>
 

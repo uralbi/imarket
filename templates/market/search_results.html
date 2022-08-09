@@ -17,12 +17,13 @@
            <form action="{% url 'item_search2' %}" class="d-flex justify-content-left" role="search">
               {% csrf_token%}
               <input class="" type="search" name="q" value="{{request.GET.q}}" placeholder="Search" aria-label="Search" reqired hidden>
-              <input class="form-control me-2 inner_shadow m-0 p-0 ps-2"
-                     style="max-width: 250px;" minlength="3"
-                     type="search" name="q2" placeholder="Search" aria-label="Search" reqired>
-              <button class="btn btn-sm float-left px-2 my_shadow"
-                      style="background: #85adad; color:  #f0f5f5;"
-                      type="submit">Search within</button>
+              <input class="form-control me-2 m-0 p-0 ps-2"
+                     style="max-width: 250px; background: #e0e0eb;
+                     box-shadow: inset 1px 1px 4px #b3b3cc, inset -2px -2px 4px white;" minlength="3"
+                     type="search" name="q2" placeholder="Filter" aria-label="Search" reqired>
+              <button class="btn btn-sm float-left py-0 px-2 my_shadow my_btn"
+                      style="background: #669999; color:  #f0f5f5;"
+                      type="submit">Search</button>
             </form>
            </div>
 
@@ -113,9 +114,5 @@
            {% endif %}
         </div>
   </div>
-
-<script>
-
-</script>
 
 {% endblock %}

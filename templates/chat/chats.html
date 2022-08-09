@@ -8,7 +8,7 @@
        </h5>
        <div id="dynamic_height" class="p-0">
            {% for item in subs%}
-           <div class="card mb-3 p-2 me-4 inner_shadow" style="background: #d1d1e0">
+           <div class="card mb-3 p-2 me-4 inner_shadow" style="background: ">
               <div class="row g-0">
 
                 <div class="col-1" style="max-height: 80px; overflow: hidden;">
@@ -18,27 +18,26 @@
 
                 <div class="col-sm-11">
 
-                    <a href="{% url 'item_detail_view' item.id%}" style="text-decoration: none; color: black">
+
                     <h6 class="mx-3 ps-2 pb-1 m-0" style="border-bottom: solid 1px whitesmoke;">
-                    {{item.item_name}}</h6></a>
+                    <a href="{% url 'item_detail_view' item.id%}" style="text-decoration: none; color: black">{{item.item_name}}</a></h6>
 
                     <a href="" class="enlarge_view{{item.id}}"
                        style="position: absolute; right:0; top: 0px; margin: 2px 6px 0 0;">
                         <img src="/media/icons/enlarge.svg" alt="Expand icon" class="my_icon_sm">
                     </a>
 
-
                   <div class="card-body py-2 enlarge_{{item.id}}" style="max-height: 85px; overflow-y: scroll;">
                     {% for msg in my_msgs %}
                         {% if msg.subject.id == item.id %}
-                          <div class="p-1 mb-1 rounded my_shadow_sm {% if msg.sender != request.user %}right{%endif%}"
+                          <div class="p-1 mb-1 rounded {% if msg.sender != request.user %}right{%endif%}"
                             style="{% if msg.sender != request.user %}
                                         background:#f0f5f5;
                                         min-width: 60%;
                                         float: right;
                                         border-top-left-radius: 200px;
                                     {% else %}
-                                        background: #f0f0f5;
+                                        background: #f2f2f2;
                                         min-width: 60%;
                                         float: left;
                                         border-bottom-right-radius: 200px;
@@ -48,7 +47,6 @@
                                 style="font-size: 0.7em;">
                             {{msg.created_at}}</p>
 
-
                             <p class="m-0 p-0 {% if msg.sender != request.user %}right{%endif%}"
                                 style="">
                                 {% if msg.sender != request.user %}
@@ -57,7 +55,7 @@
                                     To: {{msg.receiver.first_name}} {{msg.receiver.last_name}}
                                 {%endif%}
                                </p>
-                              {% if msg.sender == request.user %}
+                                {% if msg.sender == request.user %}
                                     <form action="{% url 'delete_msg' %}" method="post" class="me-2" style="width: 50px; float:left;">
                                       {% csrf_token %}
                                       <input type="text" value="{{msg.id}}" name="msg_id" hidden>

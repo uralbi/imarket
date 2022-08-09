@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" type="image/x-icon" href="/static/images/icons/wtu_w.png" rel="icon" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% url 'icons' 'logo1_w.svg' %}" rel="icon" />
     <link rel="stylesheet" href="/static/css/main.css">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200&display=swap" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;300&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- CSS only -->
@@ -29,6 +33,12 @@
     {% include 'includes/_footer.html' %}
 
     <script src="{% static 'js/misc.js' %}"></script>
+
+<script>
+    $(document).ready(function(){
+        $('div').css("font-family", "'Mulish', 'sans-serif'")
+    });
+</script>
 
 </body>
 </html>

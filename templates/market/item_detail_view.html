@@ -1,43 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load nums_to_list %}
 {% block content %}
 
     <div class="container" id="dynamic_min_height">
         <div class="center80">
-                <div class="col-12 p-0 m-0">
-                    <div class="center_fixed_250">
-                        <a href="{% url 'prev_item' item.id %}" role="button"
-                           class="btn btn-sm py-0 me-2 {% if no_prev %} disabled {% endif %} my_shadow"
-                            style="background: #666699; color: #f0f5f5;
-                            border-top-left-radius: 20px; border-bottom-left-radius: 0px;"
-                        > &#10094; Previous Item</a>
+                    <div class="row p-0 m-0">
+                        <div class="col-12 p-2 d-flex justify-content-center">
+                                <a href="{% url 'prev_item' item.id %}" role="button"
+                                   class="{% if no_prev %} disabled {% endif %} my_shadow_sm prev_btn"
+                                >  &#10094; PREV</a>
 
-                        <a href="{% url 'next_item' item.id %}" role="button"
-                           class="btn btn-sm py-0 px-4 {% if no_next %} disabled {% endif %} my_shadow"
-                        style="background: #666699; color: whitesmoke;
-                            border-top-right-radius: 0px; border-bottom-right-radius: 20px;"
-                        >Next Item &#10095;</a>
-                    </div>
+                                <a href="{% url 'next_item' item.id %}" role="button"
+                                   class="{% if no_next %} disabled {% endif %} my_shadow_sm next_btn"
+                                > NEXT &#10095; </a>
+                            </div>
+                        <div class="col-12 item_detail_title">
+                            <h4 class="p-2 rounded my_shadow_sm" style="background: #f0f0f5; color: #3d3d5c; text-align: center"> <small> {{item.status}} </small> : {{item|title}}
+                            <a href="{% url 'by_category' item.category.id %}">
+                                   <span>in {{item.category}}</span>
+                            </a>
+                            </h4>
+                        </div>
+
                 </div>
-                <div class="container mt-4 mb-3 item_detail_title">
-                <h4 class="p-2 rounded mt-4 my_shadow" style="background: #f0f0f5; color: #3d3d5c; text-align: center"> {{item.status}} : {{item|title}}
-                    <a href="{% url 'by_category' item.category.id %}">
-                           <span>in {{item.category}}</span>
-                    </a>
-                </h4>
-            </div>
-
             <div class="row">
               <div class="col-md-4">
-                      <div class="card col-sm-12 mb-2 my_shadow" style="background: #f0f0f5;">
+                      <div class="card col-sm-12 mb-2 my_shadow_sm" style="background: #f0f0f5;">
                             <div class="card-header">
                                  <strong>Details</strong>
                             </div>
 
                             <div class="card-body p-2">
-                                  <p class="card-text">Price: {{item.price}}$</p>
-                                  <p class="card-text">Date: {{item.modified_date|date:"F d, Y"}}</p>
-                                  <p class="card-text">Author: {{item.author.username|title}}</p>
+
+                                  <p class="card-text"> Price : {{item.price}} </p>
+                                  <p class="card-text"> Date : {{item.modified_date|date:"F d, Y"}}</p>
+                                  <p class="card-text"> Author : {{item.author.username|title}}</p>
                                       <hr class="m-1">
                                 <div class="d-flex flex-row-reverse m-0">
 
@@ -68,12 +66,12 @@
                                                       {% csrf_token %}
 
                                                     <div class="">
-                                                        <div class="card-body">
+                                                        <div class="card-body p-0">
                                                             <h6 class="card-title text-muted">Subject:
                                                                 <span class="my_spantext">{{item.item_name|truncatechars:70}}</span>
                                                                 for <small>${{item.price}}</small>
                                                             </h6>
-                                                            <h6 class="card-subtitle mb-2 text-muted">To "<span class="my_spantext">{{item.author.first_name|title}} {{item.author.last_name|title}}</span>"
+                                                            <h6 class="card-subtitle mb-1 text-muted">To "<span class="my_spantext">{{item.author.first_name|title}} {{item.author.last_name|title}}</span>"
 
                                                             </h6>
                                                             <p class="text-muted m-0 p-0">Message:</p>
@@ -82,13 +80,13 @@
                                                                      value="{{item.author}}" required hidden>
                                                             <input type="text" id="item" name="item" value="{{item.id}}"
                                                                      class="form-control inner_shadow" minlength="5" required hidden>
-                                                            <textarea id="msg" name="msg" rows="4" cols="30" required
-                                                            class="border rounded fst-italic ps-2 pt-1 inner_shadow"></textarea>
+                                                            <textarea id="msg" name="msg" rows="2" cols="36" required
+                                                            class="border rounded fst-italic ps-2 pt-1"></textarea>
 
                                                                 <a role="button" href="#" type="button"
-                                                            class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal">Cancel</a>
+                                                            class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4 my_btn" id="close_modal">Cancel</a>
 
-                                                            <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4"> Send Message  </button>
+                                                            <button type="submit" class="btn btn-outline-success py-0 mt-2 btn-sm my_shadow px-4 my_btn"> Send Message  </button>
 
                                                         </div>
                                                     </div>
@@ -98,12 +96,12 @@
 
                                         {% else %}
                                             <a href="{% url 'item_update' item.id %}" type="button"
-                                               class="btn btn-sm py-0 px-4 m-2 my_shadow"
-                                            style="background: #75a3a3; color: #f0f5f5;"
+                                               class="btn btn-sm py-0 px-4 m-2 my_shadow my_btn"
+                                            style="background: #5c8a8a; color: #f0f5f5;"
                                             >Edit</a>
                                             <a role="button" href="#" type="button"
-                                                   class="btn btn-sm py-0 mt-2 mb-2 me-1 my_shadow my_delete_btn"
-                                                   style="background: #d98c8c; color: #f9ecec;"
+                                                   class="btn btn-sm py-0 mt-2 mb-2 me-1 my_shadow my_delete_btn my_btn"
+                                                   style="background: #cc6666; color: #f9ecec;"
                                                     id="open_modal_{{item.id}}">Delete</a>
 
                                             <div id="delete_modal_{{item.id}}" class="my_delete_modal">
@@ -111,9 +109,10 @@
                                                     <h6>Item "{{item|title}}".</h6>
                                                     <p>Please confirm to delete!</p>
                                                     <a role="button" href="{% url 'item_delete' item.pk %}" type="button"
-                                                        class="btn btn-outline-danger py-0 mt-2 me-2 btn-sm my_shadow me-4 px-4">Delete</a>
+                                                        class="btn btn-outline-danger py-0 mt-2 me-2 btn-sm my_shadow me-4 px-4 my_btn">Delete</a>
                                                     <a role="button" href="#" type="button"
-                                                        class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4" id="close_modal_{{item.id}}">Close</a>
+                                                        class="btn btn-outline-secondary py-0 mt-2 btn-sm my_shadow px-4 my_btn"
+                                                       id="close_modal_{{item.id}}">Close</a>
                                                 </div>
                                             </div>
 
@@ -138,9 +137,7 @@
                         </script>
                                         {% endif %}
                                     {% else %}
-<!--                                        <a href="{% url 'login' %}">Login to contact</a>-->
-                                        <a href="{% url 'login' %}?next={{request.path}}">Login to contact</a>
-<!--                                        <a href="{% url 'login' %}?next={% url 'home' %}">Login to contact</a>-->
+                                        <a href="{% url 'login' %}?next={{request.path}}" class="btn btn-sm btn-outline-secondary">Login to contact</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -150,7 +147,7 @@
 
               <div class="col-md-8">
                   <div class="d-flex justify-content-center">
-                    <img class="item_detail_img my_shadow" src="{{item.image1.url}}" alt="Item picture">
+                    <img class="item_detail_img my_shadow" id="main_img" src="{{item.image1.url}}" alt="Item picture">
                   </div>
                   <div class="col-sm-12 my-2 item_detail_list_gallery">
                             <ul class="list-group">
@@ -171,7 +168,7 @@
 
             {% if item.description %}
                 <div class="col-12" >
-                    <div class="card mb-3 my_shadow" style="background: #f0f0f5;">
+                    <div class="card mb-3 my_shadow_sm" style="background: #f0f0f5;">
                       <div class="card-header"><strong>Description</strong></div>
                       <div class="card-body">
                         <p class="card-text"> {{item.description}} </p>
@@ -180,6 +177,44 @@
                 </div>
             {% endif %}
 
+        </div>
+    </div>
+
+
+    <div id="image_gallery" class="my_image_modal">
+        <div id="image_carousel" class="carousel slide" data-bs-touch="true" >
+          <div class="carousel-indicators indicator_btns">
+            <button type="button" data-bs-target="#image_carousel" data-bs-slide-to="0"
+                    class="active p-1" aria-current="true" aria-label="Slide 1"></button>
+              {% for i_num in gallery.count|nums_to_list %}
+                <button type="button" data-bs-target="#image_carousel" data-bs-slide-to="{{i_num}}"
+                    class="p-1"    aria-label='Slide {{i_num|add:"1"}}'></button>
+              {% endfor %}
+          </div>
+          <div class="carousel-inner">
+
+            <div class="carousel-item p-2 pt-4 active">
+              <img src="{{item.image1.url}}" class="d-block my_shadow" alt="Item picture">
+            </div>
+
+              {% for image in gallery%}
+            <div class="carousel-item p-2 pt-4">
+              <img src="{{image.image.url}}" class="d-block my_shadow" alt="Item picture">
+            </div>
+              {% endfor %}
+
+          </div>
+
+          <button class="carousel-control-prev" type="button" data-bs-target="#image_carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#image_carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+           <button id="img_modal_close" class="btn btn-danger m-4 my_shadow my_btn"
+                   style="position: absolute; top: 0px; right: 0px; z-index: 2;"> CLOSE </button>
         </div>
     </div>
 
