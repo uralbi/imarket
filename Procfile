@@ -1,1 +1,1 @@
-web: gunicorm infoportal.wsgi
+web: gunicorn infoportal.wsgi
