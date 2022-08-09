@@ -4,6 +4,7 @@ import os
 from decouple import config
 from django import template
 from django.test.runner import DiscoverRunner
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -11,6 +12,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+django_heroku.settings(locals())
 
 IS_HEROKU = "DYNO" in os.environ
 
