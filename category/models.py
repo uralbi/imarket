@@ -15,6 +15,5 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
         ordering = ('category_name',)
 
-
     def __str__(self):
         return self.category_name
