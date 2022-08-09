@@ -1,6 +1,9 @@
 from pathlib import Path
+import dj_database_url
+import os
 from decouple import config
 from django import template
+from django.test.runner import DiscoverRunner
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -9,7 +12,13 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
+IS_HEROKU = "DYNO" in os.environ
+
 # SECURITY WARNING: keep the secret key used in production secret!
+
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ["SECRET_KEY"]
+
 SECRET_KEY = config('SECRET_KEY')
 
 
@@ -17,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['imarket.herokuapp.com']
+ALLOWED_HOSTS = ['imarket46.herokuapp.com']
 
 register = template.Library()
 
@@ -84,6 +93,16 @@ DATABASES = {
     }
 }
 
+MAX_CONN_AGE = 600
+
+if "DATABASE_URL" in os.environ:
+    # Configure Django for DATABASE_URL environment variable.
+    DATABASES["default"] = dj_database_url.config(
+        conn_max_age=MAX_CONN_AGE, ssl_require=True)
+
+    # Enable test database if found in CI environment.
+    if "CI" in os.environ:
+        DATABASES["default"]["TEST"] = DATABASES["default"]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -121,12 +140,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+class HerokuDiscoverRunner(DiscoverRunner):
+    """Test Runner for Heroku CI, which provides a database for you.
+    This requires you to set the TEST database (done for you by settings().)"""
+
+    def setup_databases(self, **kwargs):
+        self.keepdb = True
+        return super(HerokuDiscoverRunner, self).setup_databases(**kwargs)
+
+
+# Use HerokuDiscoverRunner on Heroku CI
+if "CI" in os.environ:
+    TEST_RUNNER = "gettingstarted.settings.HerokuDiscoverRunner"
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.SUCCESS: 'success',
     messages.INFO: 'info',
 }
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
